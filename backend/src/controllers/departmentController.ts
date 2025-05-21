@@ -3,6 +3,16 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+export const getDepartments = async (req: Request, res: Response): Promise<Response> => {
+  const departments = await prisma.department.findMany();
+  if (departments.length === 0) {
+    return res.status(404).json({ message: 'There are no departments yet.' });
+  }
+  else {
+    return res.json(departments);
+  }
+};
+
 export const getDepartmentById = async (req: Request, res: Response) => {
   try {
     const departmentId = parseInt(req.params.id);
@@ -61,4 +71,57 @@ export const getDepartmentById = async (req: Request, res: Response) => {
     console.error('Error fetching department:', error);
     return res.status(500).json({ message: 'Internal server error', error });
   }
+};
+
+export const createDepartment = async (req: Request, res: Response): Promise<Response> => {
+  const { name, phone, email } = req.body;
+
+  if (!name || !phone || !email) {
+    return res.status(400).json({ message: 'Some data is missing in the request body. Check it again, please.' });
+  }
+
+  const exists = await prisma.department.findFirst({ where: { name } });
+  if (exists) {
+    return res.status(400).json({ message: 'Department already exists.' });
+  }
+
+  const newDepartment = await prisma.department.create({
+    data: { name, phone, email },
+  });
+
+  return res.status(201).json({ message: 'Department successfully created.', data: newDepartment });
+};
+
+export const updateDepartment = async (req: Request, res: Response): Promise<Response> => {
+  const id = parseInt(req.params.id);
+  const { name, phone, email } = req.body;
+
+  if (!name || !phone || !email) {
+    return res.status(400).json({ message: 'Some data is missing in the request body. Check it again, please.' });
+  }
+
+  const department = await prisma.department.findUnique({ where: { id } });
+  if (!department) {
+    return res.status(404).json({ message: 'Department does not exist.' });
+  }
+
+  const updated = await prisma.department.update({
+    where: { id },
+    data: { name, phone, email },
+  });
+
+  return res.json({ message: 'Department successfully updated.', data: updated });
+};
+
+export const deleteDepartment = async (req: Request, res: Response): Promise<Response> => {
+  const id = parseInt(req.params.id);
+
+  const department = await prisma.department.findUnique({ where: { id } });
+  if (!department) {
+    return res.status(404).json({ message: 'Department does not exist.' });
+  }
+
+  await prisma.department.delete({ where: { id } });
+
+  return res.json({ message: 'Department successfully deleted.' });
 };

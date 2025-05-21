@@ -10,7 +10,19 @@ const prisma = new PrismaClient();
 
 export const registerEmployee = async (req: Request, res: Response) => {
   const { id, fullName, login, password, departmentId } = req.body;
+
+  if (!id || !fullName || !login || !password || !departmentId) {
+    return res.status(400).json({ message: 'Missing fields in request body' });
+  }
+
+  // Verificar si ya existe un empleado con el mismo login
+  const exists = await prisma.employee.findUnique({ where: { login } });
+  if (exists) {
+    return res.status(400).json({ message: 'Employee with this login already exists' });
+  }
+
   try {
+    // Encriptar contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
     const employee = await prisma.employee.create({
       data: { id, fullName, login, password: hashedPassword, departmentId }
