@@ -11,9 +11,7 @@ const prisma = new PrismaClient();
 // GET todos los empleados
 export const getEmployees = async (_req: Request, res: Response) => {
   const employees = await prisma.employee.findMany();
-  if (employees.length === 0) {
-    return res.status(404).json({ message: 'There are no employees yet.' });
-  }
+  if (employees.length === 0) return res.status(404).json({ message: 'There are no employees yet.' });
   res.json(employees);
 };
 
@@ -35,46 +33,6 @@ export const getEmployeeById = async (req: Request, res: Response) => {
     res.json(employee);
   } catch (err) {
     res.status(500).json({ error: 'Error retrieving employee', detail: err });
-  }
-};
-
-// POST crear nuevo empleado
-export const createEmployee = async (req: Request, res: Response) => {
-  const { id, fullName, login, password, departmentId } = req.body;
-
-  if (!id || !fullName || !login || !password || !departmentId) {
-    return res.status(400).json({ message: 'Some data is missing in the request body. Check it again, please.' });
-  }
-
-  const existingEmployee = await prisma.employee.findUnique({ where: { id } });
-  const existingLogin = await prisma.employee.findFirst({ where: { login } });
-  if (existingEmployee || existingLogin) {
-    return res.status(409).json({ message: 'Employee already exists.' });
-  }
-
-  const department = await prisma.department.findUnique({ where: { id: departmentId } });
-  if (!department) {
-    return res.status(404).json({ message: 'Department does not exist.' });
-  }
-
-  try {
-    // Hasheamos la contraseña
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Guardamos en la base de datos con la contraseña hasheada
-    const newEmployee = await prisma.employee.create({
-      data: {
-        id,
-        fullName,
-        login,
-        password: hashedPassword,
-        departmentId,
-      },
-    });
-    res.status(201).json({ message: 'Employee successfully created.' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error registering employee.' });
   }
 };
 
@@ -133,10 +91,11 @@ export const updateEmployee = async (req: Request, res: Response) => {
 export const deleteEmployee = async (req: Request, res: Response) => {
   const { id } = req.params;
 
+  if(checkAdmin(id, '', '')) res.status(409).json({ message: "You are not able to delete Admin user from this app." });
+
   const employee = await prisma.employee.findUnique({ where: { id } });
-  if (!employee) {
-    return res.status(404).json({ message: 'Employee does not exist.' });
-  }
+
+  if (!employee) return res.status(404).json({ message: 'Employee does not exist.' });
 
   await prisma.employee.delete({ where: { id } });
   res.json({ message: 'Employee successfully deleted.' });
@@ -149,9 +108,11 @@ export const registerEmployee = async (req: Request, res: Response) => {
     return res.status(400).json({ message: 'Missing fields in request body' });
   }
 
-  if (fullName == 'admin' || login == 'admin') {
-    return res.status(409).json({ message: 'User already exists.' });
-  }
+  if(checkAdmin(id, fullName, login)) return res.status(409).json({ message: 'User admin already exists.' });
+
+  // if (fullName == 'admin' || login == 'admin') {
+  //   return res.status(409).json({ message: 'User already exists.' });
+  // }
 
   // Verificar si ya existe un empleado con el mismo login
   const exists = await prisma.employee.findUnique({ where: { login } });
