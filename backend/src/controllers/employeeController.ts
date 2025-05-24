@@ -83,27 +83,42 @@ export const updateEmployee = async (req: Request, res: Response) => {
     return res.status(400).json({ message: 'Some data is missing in the request body. Check it again, please.' });
   }
 
-  const existing = await prisma.employee.findUnique({ where: { id } });
-  if (!existing) {
-    return res.status(404).json({ message: 'Employee does not exist.' });
-  }
+  try {
+    const existing = await prisma.employee.findUnique({ where: { id } });
+    if (!existing) {
+      return res.status(404).json({ message: 'Employee does not exist.' });
+    }
 
-  const department = await prisma.department.findUnique({ where: { id: departmentId } });
-  if (!department) {
-    return res.status(404).json({ message: 'Department does not exist.' });
-  }
-
-  await prisma.employee.update({
-    where: { id },
-    data: {
+    const department = await prisma.department.findUnique({ where: { id: departmentId } });
+    if (!department) {
+      return res.status(404).json({ message: 'Department does not exist.' });
+    }
+    // Prepara el objeto de datos para la actualización
+    const updateData: any = {
       fullName,
       login,
-      password,
       departmentId,
-    },
-  });
+    };
 
-  res.json({ message: 'Employee successfully updated.' });
+    // Si el campo password viene definido, lo encriptamos
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      updateData.password = hashedPassword;
+    }
+
+    const updatedEmployee = await prisma.employee.update({
+      where: { id },
+      data: updateData,
+    });
+
+    // No devolvemos la contraseña
+    const { password: _, ...employeeWithoutPassword } = updatedEmployee;
+    res.json({ message: 'Employee successfully updated.' });
+    //res.json(employeeWithoutPassword);
+  } catch (error) {
+    console.error("Error updating employee:", error);
+    res.status(500).json({ message: "Error updating employee" });
+  }
 };
 
 // DELETE eliminar empleado

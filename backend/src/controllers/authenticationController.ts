@@ -15,6 +15,10 @@ export const registerEmployee = async (req: Request, res: Response) => {
     return res.status(400).json({ message: 'Missing fields in request body' });
   }
 
+  if (fullName == 'admin' || login == 'admin') {
+    return res.status(409).json({ message: 'User already exists.' });
+  }
+
   // Verificar si ya existe un empleado con el mismo login
   const exists = await prisma.employee.findUnique({ where: { login } });
   if (exists) {

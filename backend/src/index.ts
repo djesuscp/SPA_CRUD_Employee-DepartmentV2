@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import authenticationRoutes from './routes/authenticationRoutes';
 import departmentRoutes from './routes/departmentRoutes';
 import employeeRoutes from './routes/employeeRoutes';
-//import adminRoutes from './routes/adminRoutes';
+import adminRoutes from './routes/adminRoutes';
 
 dotenv.config();
 const app = express();
@@ -17,7 +17,7 @@ app.use(express.json());
 app.use('/api', authenticationRoutes); // /api/login y /api/empleado (registro)
 app.use('/api/employee', employeeRoutes); // /api/empleado/:id
 app.use('/api/department', departmentRoutes); // /api/departamento/:id
-//app.use('/api/admin', adminRoutes); // solo admin
+app.use('/api/admin', adminRoutes); // solo admin
 
 const PORT = process.env.PORT || 3000;
 
