@@ -148,6 +148,7 @@ def installAngular():
         run(f'npm install -g @angular/cli')
     else:
         print(f' {stylizedStr(1, 32, 'Angular is already installed in your system.')}')
+        run(f'ng version')
 
 # Function to install Backend. Includes some sample code in a "server.js" file.
 def installBackend(orm):
