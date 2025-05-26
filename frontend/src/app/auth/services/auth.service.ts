@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { jwtDecode } from "C:/Users/DJesus/Documents/SPA_CRUD_Employee-DepartmentV2/frontend/node_modules/jwt-decode/build/esm/index";
+
+export interface JwtPayload {
+  login: string;
+  // puedes añadir más propiedades si tu token las incluye
+}
+
 
 @Injectable({
   providedIn: 'root',
@@ -18,9 +25,11 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}/employee`, data);
   }
 
-  saveSession(response: any) {
-    localStorage.setItem('token', response.token);
-    localStorage.setItem('user', JSON.stringify(response.user));
+  saveSession(res: { token: string }) {
+    localStorage.setItem('token', res.token);
+
+    const payload: JwtPayload = jwtDecode(res.token);
+    localStorage.setItem('login', payload.login); // guardar login si quieres
   }
 
   logout() {

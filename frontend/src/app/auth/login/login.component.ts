@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { AuthService, JwtPayload } from '../services/auth.service';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   standalone: true,
@@ -25,11 +26,12 @@ export class LoginComponent implements OnInit{
 
   onSubmit() {
     if (this.form.invalid) return;
-
+    
     this.auth.login(this.form.value).subscribe({
       next: (res) => {
         this.auth.saveSession(res);
-        if (res.user.login === 'admin') {
+        const payload: JwtPayload = jwtDecode(res.token);
+        if (payload.login === 'admin') {
           this.router.navigate(['/admin']);
         } else {
           this.router.navigate(['/employee']);
