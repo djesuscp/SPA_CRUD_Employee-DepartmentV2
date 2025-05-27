@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EmployeeService } from '../../../core/services/employee.service';
 import { DepartmentService } from '../../../core/services/department.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -15,6 +16,7 @@ export class AdminDashboardComponent implements OnInit {
   private fb = inject(FormBuilder);
   private employeeService = inject(EmployeeService);
   private departmentService = inject(DepartmentService);
+  private toastr = inject(ToastrService);
 
   employees: any[] = [];
   departments: any[] = [];
@@ -40,7 +42,6 @@ export class AdminDashboardComponent implements OnInit {
     });
 
     this.departmentForm = this.fb.group({
-      id: ['', Validators.required],
       name: ['', Validators.required],
       phone: ['', [Validators.required, Validators.pattern(phoneRegex)]],
       email: ['', [Validators.required, Validators.email]]
@@ -54,15 +55,29 @@ export class AdminDashboardComponent implements OnInit {
 
   fetchEmployees(): void {
     this.employeeService.getEmployees().subscribe({
-      next: (data) => this.employees = data,
-      error: (err) => this.error = 'Error loading employees'
-    });
+    next: (data) => this.employees = data,
+    error: (err) => {
+      this.employees = [];
+      if (err.status === 404) {
+        this.toastr.info('No hay empleados registrados.');
+      } else {
+        this.toastr.error('Error al cargar los empleados.');
+      }
+    }
+  });
   }
 
   fetchDepartments(): void {
     this.departmentService.getDepartments().subscribe({
       next: (data) => this.departments = data,
-      error: (err) => this.error = 'Error loading departments'
+      error: (err) => {
+        this.departments = [];
+        if (err.status === 404) {
+          this.toastr.info('No hay departamentos registrados.');
+        } else {
+          this.toastr.error('Error al cargar departamentos.');
+        }
+      }
     });
   }
 
@@ -73,17 +88,39 @@ export class AdminDashboardComponent implements OnInit {
     data.departmentId = Number(data.departmentId);
     //const data = this.employeeForm.value;
     if (this.editingEmployeeId) {
-      this.employeeService.updateEmployee(this.editingEmployeeId, data).subscribe(() => {
-        this.fetchEmployees();
-        this.employeeForm.reset();
-        this.employeeForm.get('id')?.enable();
-        this.editingEmployeeId = null;
+      this.employeeService.updateEmployee(this.editingEmployeeId, data).subscribe({
+        next: (res) => {
+          this.toastr.success('Empleado actualizado correctamente.');
+          this.fetchEmployees();
+          this.employeeForm.reset();
+          this.employeeForm.get('id')?.enable();
+          this.editingEmployeeId = null;
+        },
+        error: (err) => {
+          if (err.status === 403) {
+            this.toastr.error('No se puede editar al administrador.');
+          } else if (err.status === 409) {
+            this.toastr.error('El DNI o login ya existe.');
+          } else {
+            this.toastr.error('Error al actualizar empleado.');
+          }
+        }
       });
     } else {
-      this.employeeService.createEmployee(data).subscribe(() => {
-        this.fetchEmployees();
-        this.employeeForm.reset();
-        this.employeeForm.get('id')?.enable();
+      this.employeeService.createEmployee(data).subscribe({
+      next: () => {
+          this.toastr.success('Empleado creado correctamente.');
+          this.fetchEmployees();
+          this.employeeForm.reset();
+          this.employeeForm.get('id')?.enable();
+        },
+        error: (err) => {
+          if (err.status === 409) {
+            this.toastr.error('El ID o login ya existe.');
+          } else {
+            this.toastr.error('Error al crear empleado.');
+          }
+        }
       });
     }
   }
@@ -95,9 +132,19 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   deleteEmployee(id: string): void {
-    this.employeeService.deleteEmployee(id).subscribe(() => {
-      this.fetchEmployees();
-    });
+    this.employeeService.deleteEmployee(id).subscribe({
+      next: (res) => {
+          this.toastr.success('Empleado eliminado correctamente.');
+          this.fetchEmployees();
+        },
+        error: (err) => {
+          if (err.status === 403) {
+            this.toastr.error('No se puede eliminar al administrador.'); // 'Cannot delete the admin user.'
+          } else {
+            this.toastr.error('Error al eliminar el empleado.');
+          }
+        }
+      });
   }
 
   submitDepartmentForm(): void {
@@ -105,27 +152,43 @@ export class AdminDashboardComponent implements OnInit {
 
     const data = this.departmentForm.value;
     if (this.editingDepartmentId) {
-      this.departmentService.updateDepartment(this.editingDepartmentId, data).subscribe(() => {
-        this.fetchDepartments();
-        this.departmentForm.reset();
-        this.editingDepartmentId = null;
+      this.departmentService.updateDepartment(this.editingDepartmentId, data).subscribe({
+        next: () => {
+          this.toastr.success('Departamento actualizado correctamente.');
+          this.fetchDepartments();
+          this.departmentForm.reset();
+          this.editingDepartmentId = null;
+        },
+        error: () => this.toastr.error('Error al actualizar departamento.')
       });
     } else {
-      this.departmentService.createDepartment(data).subscribe(() => {
-        this.fetchDepartments();
-        this.departmentForm.reset();
+      this.departmentService.createDepartment(data).subscribe({
+        next: () => {
+          this.toastr.success('Departamento creado correctamente.');
+          this.fetchDepartments();
+          this.departmentForm.reset();
+        },
+        error: () => this.toastr.error('Error al crear departamento.')
       });
     }
   }
 
   editDepartment(dept: any): void {
     this.editingDepartmentId = dept.id;
-    this.departmentForm.patchValue(dept);
+    this.departmentForm.patchValue({
+      name: dept.name,
+      phone: dept.phone,
+      email: dept.email
+    });
   }
 
   deleteDepartment(id: string): void {
-    this.departmentService.deleteDepartment(id).subscribe(() => {
-      this.fetchDepartments();
+      this.departmentService.deleteDepartment(id).subscribe({
+      next: () => {
+        this.toastr.success('Departamento eliminado.');
+        this.fetchDepartments();
+      },
+      error: () => this.toastr.error('Error al eliminar departamento.')
     });
   }
 }

@@ -50,6 +50,14 @@
       </button>
     </form>
 
+    <!-- <div *ngIf="successMessage" class="alert success">
+      {{ successMessage }}
+    </div>
+
+    <div *ngIf="errorMessage" class="alert error">
+      {{ errorMessage }}
+    </div> -->
+
     <h2>Empleados</h2>
     <table>
       <thead>
@@ -85,10 +93,11 @@
     <h2>Gestión de Departamentos</h2>
 
     <form [formGroup]="departmentForm" (ngSubmit)="submitDepartmentForm()" novalidate>
-      <label for="dept-id">ID:</label>
-      <input id="dept-id" formControlName="id" type="text" />
-      <div *ngIf="departmentForm.get('id')?.touched && departmentForm.get('id')?.invalid" class="error">
-        <small>El ID del departamento es obligatorio.</small>
+
+      <!-- Mostrar ID solo en modo edición -->
+      <div *ngIf="editingDepartmentId">
+        <label for="id">ID:</label>
+        <input id="id" [value]="editingDepartmentId" disabled />
       </div>
 
       <label for="name">Nombre:</label>
