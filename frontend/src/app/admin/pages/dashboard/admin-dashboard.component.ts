@@ -4,16 +4,13 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { EmployeeService } from '../../../core/services/employee.service';
 import { DepartmentService } from '../../../core/services/department.service';
 
-@NgModule({
+@Component({
+  selector: 'app-admin-dashboard',
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  providers: [EmployeeService, DepartmentService, FormBuilder, FormGroup, Validators],
+  templateUrl: './admin-dashboard.component.html',
+  styleUrls: ['./admin-dashboard.component.scss']
 })
-
-// @Component({
-//   selector: 'app-admin-dashboard',
-//   templateUrl: './admin-dashboard.component.html',
-//   styleUrls: ['./admin-dashboard.component.scss']
-// })
 export class AdminDashboardComponent implements OnInit {
   private fb = inject(FormBuilder);
   private employeeService = inject(EmployeeService);

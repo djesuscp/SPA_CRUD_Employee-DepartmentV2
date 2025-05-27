@@ -2,10 +2,17 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
+import { jwtDecode } from 'jwt-decode';
 
-@Injectable({
+Injectable({
   providedIn: 'root',
 })
+
+export interface JwtPayload {
+  login: string;
+  // puedes añadir más propiedades si tu token las incluye
+}
+
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
@@ -24,6 +31,13 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/empleado`, data);
   }
 
+  saveSession(res: { token: string }) {
+    localStorage.setItem('token', res.token);
+    const payload: JwtPayload = jwtDecode(res.token);
+    localStorage.setItem('login', payload.login); // guardar login si quieres
+  }
+
+
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
@@ -33,6 +47,15 @@ export class AuthService {
   getToken(): string | null {
     return localStorage.getItem('token');
   }
+
+  getLoginFromToken(): string | null {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+
+    const payload: JwtPayload = jwtDecode(token);
+    return payload.login;
+  }
+
 
   isAdmin(): boolean {
     return localStorage.getItem('role') === 'admin';
