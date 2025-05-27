@@ -45,7 +45,7 @@ export const getEmployeeById = async (req: Request, res: Response) => {
 export const registerEmployee = async (req: Request, res: Response) => {
   const { id, fullName, login, password, departmentId } = req.body;
   if (!id || !fullName || !login || !password || !departmentId) return res.status(400).json({ message: 'Missing fields in request body' });
-
+  console.log(req.body);
   // Verify that user is not trying to create an admin.
   if (checkAdmin(login)) return res.status(409).json({ message: 'User already exists.' });
 

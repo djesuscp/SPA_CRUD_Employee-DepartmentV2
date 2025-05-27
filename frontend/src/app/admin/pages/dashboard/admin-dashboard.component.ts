@@ -28,7 +28,11 @@ export class AdminDashboardComponent implements OnInit {
   error: string = '';
 
   constructor() {
+    const dniNieRegex = /^[XYZ]?\d{7,8}[A-Z]$/;
+    const phoneRegex = /^\d{9}$/;
+
     this.employeeForm = this.fb.group({
+      id: ['', [Validators.required, Validators.pattern(dniNieRegex)]],
       fullName: ['', Validators.required],
       login: ['', Validators.required],
       password: ['', Validators.required],
@@ -38,7 +42,7 @@ export class AdminDashboardComponent implements OnInit {
     this.departmentForm = this.fb.group({
       id: ['', Validators.required],
       name: ['', Validators.required],
-      phone: ['', Validators.required],
+      phone: ['', [Validators.required, Validators.pattern(phoneRegex)]],
       email: ['', [Validators.required, Validators.email]]
     });
   }
@@ -65,17 +69,21 @@ export class AdminDashboardComponent implements OnInit {
   submitEmployeeForm(): void {
     if (this.employeeForm.invalid) return;
 
-    const data = this.employeeForm.value;
+    const data = this.employeeForm.getRawValue();
+    data.departmentId = Number(data.departmentId);
+    //const data = this.employeeForm.value;
     if (this.editingEmployeeId) {
       this.employeeService.updateEmployee(this.editingEmployeeId, data).subscribe(() => {
         this.fetchEmployees();
         this.employeeForm.reset();
+        this.employeeForm.get('id')?.enable();
         this.editingEmployeeId = null;
       });
     } else {
       this.employeeService.createEmployee(data).subscribe(() => {
         this.fetchEmployees();
         this.employeeForm.reset();
+        this.employeeForm.get('id')?.enable();
       });
     }
   }
@@ -83,6 +91,7 @@ export class AdminDashboardComponent implements OnInit {
   editEmployee(emp: any): void {
     this.editingEmployeeId = emp.id;
     this.employeeForm.patchValue(emp);
+    this.employeeForm.get('id')?.disable();
   }
 
   deleteEmployee(id: string): void {
