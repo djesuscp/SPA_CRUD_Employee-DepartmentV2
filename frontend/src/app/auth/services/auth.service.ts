@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { jwtDecode } from "C:/Users/DJesus/Documents/SPA_CRUD_Employee-DepartmentV2/frontend/node_modules/jwt-decode/build/esm/index";
+import { jwtDecode } from 'jwt-decode';
 
 export interface JwtPayload {
   login: string;

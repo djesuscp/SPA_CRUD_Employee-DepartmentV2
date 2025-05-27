@@ -8,8 +8,7 @@
     <h2>Gestión de Empleados</h2>
 
     <form [formGroup]="employeeForm" (ngSubmit)="submitEmployeeForm()">
-      <input type="text" placeholder="DNI" formControlName="id" />
-      <input type="text" placeholder="Nombre" formControlName="name" />
+      <input type="text" placeholder="Nombre" formControlName="fullName" />
       <input type="text" placeholder="Login" formControlName="login" />
       <input type="password" placeholder="Contraseña" formControlName="password" />
       <select formControlName="departmentId">

@@ -29,8 +29,7 @@ export class AdminDashboardComponent implements OnInit {
 
   constructor() {
     this.employeeForm = this.fb.group({
-      id: ['', Validators.required, Validators.pattern], // VALIDAR FORMATO DNI.
-      name: ['', Validators.required],
+      fullName: ['', Validators.required],
       login: ['', Validators.required],
       password: ['', Validators.required],
       departmentId: ['', Validators.required]

@@ -6,22 +6,22 @@ import { Observable } from 'rxjs';
 
 export class DepartmentService {
   private http = inject(HttpClient);
-  private baseUrl = '/api/department';
+  private readonly baseUrl = 'http://localhost:3000/api';
 
   getDepartments(): Observable<any[]> {
-    return this.http.get<any[]>('/api/department/');
+    return this.http.get<any[]>(`${this.baseUrl}/department/`);
   }
 
   createDepartment(data: any): Observable<any> {
-  return this.http.post('/api/department/', data);
+  return this.http.post(`${this.baseUrl}/department/`, data);
   }
 
   updateDepartment(id: string, data: any): Observable<any> {
-    return this.http.put(`/api/department/${id}`, data);
+    return this.http.put(`${this.baseUrl}/department/${id}`, data);
   }
 
   deleteDepartment(id: string): Observable<any> {
-    return this.http.delete(`/api/department/${id}`);
+    return this.http.delete(`${this.baseUrl}/department/${id}`);
   }
 
 }
