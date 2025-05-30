@@ -188,7 +188,7 @@ export class AdminDashboardComponent implements OnInit {
         this.toastr.success('Departamento eliminado.');
         this.fetchDepartments();
       },
-      error: () => this.toastr.error('Error al eliminar departamento.')
+      error: () => this.toastr.error('Error al eliminar departamento. Existen empleados vinculados.')
     });
   }
 }
