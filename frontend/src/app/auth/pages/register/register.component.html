@@ -1,5 +1,10 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
+<form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
   <h2>Registro</h2>
+
+  <label>
+    DNI/NIE:
+    <input formControlName="id" />
+  </label>
 
   <label>
     Nombre completo
@@ -24,4 +29,47 @@
   <button type="submit">Registrarse</button>
 
   <a routerLink="/login">¿Ya tienes cuenta? Inicia sesión</a>
+
 </form>
+
+<!-- <form [formGroup]="employeeForm" (ngSubmit)="submitEmployeeForm()" #empForm="ngForm" novalidate>
+  <div *ngIf="!editingEmployeeId">
+    <label for="id">ID (DNI/NIE):</label>
+    <input id="id" formControlName="id" type="text" />
+    <div *ngIf="employeeForm.get('id')?.touched && employeeForm.get('id')?.invalid" class="error">
+      <small *ngIf="employeeForm.get('id')?.errors?.['required']">El ID es obligatorio.</small>
+      <small *ngIf="employeeForm.get('id')?.errors?.['pattern']">Formato de ID inválido (DNI/NIE).</small>
+    </div>
+  </div>
+
+  <label for="fullName">Nombre completo:</label>
+  <input id="fullName" formControlName="fullName" type="text" />
+  <div *ngIf="employeeForm.get('fullName')?.touched && employeeForm.get('fullName')?.invalid" class="error">
+    <small>El nombre es obligatorio.</small>
+  </div>
+
+  <label for="login">Login:</label>
+  <input id="login" formControlName="login" type="text" />
+  <div *ngIf="employeeForm.get('login')?.touched && employeeForm.get('login')?.invalid" class="error">
+    <small>El login es obligatorio.</small>
+  </div>
+
+  <label for="password">Contraseña:</label>
+  <input id="password" formControlName="password" type="password" />
+  <div *ngIf="employeeForm.get('password')?.touched && employeeForm.get('password')?.invalid" class="error">
+    <small>La contraseña es obligatoria.</small>
+  </div>
+
+  <label for="departmentId">Departamento:</label>
+  <select id="departmentId" formControlName="departmentId">
+    <option value="" disabled>Seleccione un departamento</option>
+    <option *ngFor="let dept of departments" [value]="dept.id">{{ dept.name }}</option>
+  </select>
+  <div *ngIf="employeeForm.get('departmentId')?.touched && employeeForm.get('departmentId')?.invalid" class="error">
+    <small>Debe seleccionar un departamento.</small>
+  </div>
+
+  <button type="submit" [disabled]="employeeForm.invalid">
+    Registrarse
+  </button>
+</form> -->
