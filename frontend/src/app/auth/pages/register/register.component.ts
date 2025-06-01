@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { EmployeeService } from '../../../core/services/employee.service';
+import { DepartmentService } from '../../../core/services/department.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -19,9 +20,11 @@ export class RegisterComponent implements OnInit {
   private auth = inject(AuthService);
   private router = inject(Router);
   private employeeService = inject(EmployeeService);
+  private departmentService = inject(DepartmentService);
   private toastr = inject(ToastrService);
 
   employees: any[] = [];
+  departments: any[] = [];
 
   constructor() {
     const dniNieRegex = /^[XYZ]?\d{7,8}[A-Z]$/;
@@ -37,6 +40,7 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchEmployees();
+    this.fetchDepartments();
   }
 
   fetchEmployees(): void {
@@ -51,6 +55,20 @@ export class RegisterComponent implements OnInit {
       }
     }
   });
+  }
+
+  fetchDepartments(): void {
+    this.departmentService.getDepartments().subscribe({
+      next: (data) => this.departments = data,
+      error: (err) => {
+        this.departments = [];
+        if (err.status === 404) {
+          this.toastr.info('No hay departamentos registrados.');
+        } else {
+          this.toastr.error('Error al cargar departamentos.');
+        }
+      }
+    });
   }
 
   onSubmit() {

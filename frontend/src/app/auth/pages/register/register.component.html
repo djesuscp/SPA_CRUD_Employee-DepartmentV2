@@ -1,4 +1,4 @@
-<form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
+<!-- <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
   <h2>Registro</h2>
 
   <label>
@@ -30,16 +30,23 @@
 
   <a routerLink="/login">¿Ya tienes cuenta? Inicia sesión</a>
 
-</form>
+</form> -->
 
-<!-- <form [formGroup]="employeeForm" (ngSubmit)="submitEmployeeForm()" #empForm="ngForm" novalidate>
-  <div *ngIf="!editingEmployeeId">
+<form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
+  <!-- <div *ngIf="!editingEmployeeId">
     <label for="id">ID (DNI/NIE):</label>
     <input id="id" formControlName="id" type="text" />
     <div *ngIf="employeeForm.get('id')?.touched && employeeForm.get('id')?.invalid" class="error">
       <small *ngIf="employeeForm.get('id')?.errors?.['required']">El ID es obligatorio.</small>
       <small *ngIf="employeeForm.get('id')?.errors?.['pattern']">Formato de ID inválido (DNI/NIE).</small>
     </div>
+  </div> -->
+
+  <label for="id">ID (DNI/NIE):</label>
+  <input id="id" formControlName="id" type="text" />
+  <div *ngIf="employeeForm.get('id')?.touched && employeeForm.get('id')?.invalid" class="error">
+    <small *ngIf="employeeForm.get('id')?.errors?.['required']">El ID es obligatorio.</small>
+    <small *ngIf="employeeForm.get('id')?.errors?.['pattern']">Formato de ID inválido (DNI/NIE).</small>
   </div>
 
   <label for="fullName">Nombre completo:</label>
@@ -72,4 +79,4 @@
   <button type="submit" [disabled]="employeeForm.invalid">
     Registrarse
   </button>
-</form> -->
+</form>
