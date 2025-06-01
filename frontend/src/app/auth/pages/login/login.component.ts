@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { jwtDecode } from 'jwt-decode';
-import { JwtPayload } from '../../services/auth.service';
+import { JwtPayload } from '../../../core/services/auth.service';
 
 @Component({
   standalone: true,
