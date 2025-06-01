@@ -11,6 +11,10 @@ export class EmployeeService {
     return this.http.get<any[]>(`${this.baseUrl}/employee/`);
   }
 
+  getEmployeeById(id: string): Observable<any> {
+  return this.http.get<any>(`${this.baseUrl}/employees/${id}`);
+  }
+
   createEmployee(data: any): Observable<any> {
   return this.http.post(`${this.baseUrl}/employee/register`, data);
   }
@@ -22,5 +26,4 @@ export class EmployeeService {
   deleteEmployee(id: string): Observable<any> {
     return this.http.delete(`${this.baseUrl}/employee/${id}`);
   }
-
 }

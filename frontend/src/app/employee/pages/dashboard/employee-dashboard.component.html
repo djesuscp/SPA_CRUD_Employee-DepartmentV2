@@ -1,1 +1,44 @@
-<p>dashboard works!</p>
+<h2>Empleado</h2>
+<div *ngIf="employee; else noEmployee">
+  <h2>Detalles del Empleado</h2>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>Campo</th>
+        <th>Valor</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>ID</td>
+        <td>{{ employee.id }}</td>
+      </tr>
+      <tr>
+        <td>Nombre completo</td>
+        <td>{{ employee.fullName }}</td>
+      </tr>
+      <tr>
+        <td>Login</td>
+        <td>{{ employee.login }}</td>
+      </tr>
+      <tr>
+        <td>Departamento</td>
+        <td>{{ employee.department?.name }}</td>
+      </tr>
+      <tr>
+        <td>Teléfono del departamento</td>
+        <td>{{ employee.department?.phone }}</td>
+      </tr>
+      <tr>
+        <td>Email del departamento</td>
+        <td>{{ employee.department?.email }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<ng-template #noEmployee>
+  <p>No se ha cargado ningún empleado.</p>
+</ng-template>
+
