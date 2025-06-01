@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EmployeeService } from '../../../core/services/employee.service';
 import { DepartmentService } from '../../../core/services/department.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -16,6 +17,7 @@ export class AdminDashboardComponent implements OnInit {
   private fb = inject(FormBuilder);
   private employeeService = inject(EmployeeService);
   private departmentService = inject(DepartmentService);
+  private auth = inject(AuthService);
   private toastr = inject(ToastrService);
 
   employees: any[] = [];
@@ -190,6 +192,10 @@ export class AdminDashboardComponent implements OnInit {
       },
       error: () => this.toastr.error('Error al eliminar departamento. Existen empleados vinculados.')
     });
+  }
+
+  logOut() {
+    this.auth.logout();
   }
 }
 

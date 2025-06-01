@@ -37,6 +37,7 @@ export class AuthService {
   
     logout() {
       localStorage.clear();
+      this.router.navigate(['/login']);
     }
   
     private readonly tokenKey = 'token';
