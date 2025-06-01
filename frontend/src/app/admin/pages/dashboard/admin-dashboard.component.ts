@@ -30,7 +30,7 @@ export class AdminDashboardComponent implements OnInit {
   error: string = '';
 
   constructor() {
-    const dniNieRegex = /^[XYZ]?\d{7,8}[A-Z]$/;
+    const dniNieRegex = /^(?:\d{8}|[XYZ]\d{7})[A-Z]$/;
     const phoneRegex = /^\d{9}$/;
 
     this.employeeForm = this.fb.group({

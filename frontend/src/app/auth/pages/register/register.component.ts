@@ -27,7 +27,8 @@ export class RegisterComponent implements OnInit {
   departments: any[] = [];
 
   constructor() {
-    const dniNieRegex = /^[XYZ]?\d{7,8}[A-Z]$/;
+    const dniNieRegex = /^(?:\d{8}|[XYZ]\d{7})[A-Z]$/
+;
 
     this.employeeForm = this.fb.group({
       id: ['', [Validators.required, Validators.pattern(dniNieRegex)]],
@@ -72,6 +73,7 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.employeeForm.invalid) return;
     const data = this.employeeForm.getRawValue();
     data.departmentId = Number(data.departmentId);
     this.employeeService.createEmployee(data).subscribe({
