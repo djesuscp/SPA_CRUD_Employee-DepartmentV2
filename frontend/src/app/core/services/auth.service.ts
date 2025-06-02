@@ -22,48 +22,48 @@ export class AuthService {
       return this.http.post(`${this.baseUrl}/login`, data);
     }
   
-    register(data: any): Observable<any> {
-      return this.http.post(`${this.baseUrl}/employee`, data);
-    }
+  register(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/employee`, data);
+  }
   
-    saveSession(res: { token: string }) {
-      localStorage.setItem('token', res.token);
-      const payload: JwtPayload = jwtDecode(res.token);
-      localStorage.setItem('login', payload.login);
-      if (payload.login === 'admin') {
-        this.router.navigate(['/admin']);
-      } else {
-        this.router.navigate(['/employee']);
-      }
+  saveSession(res: { token: string }) {
+    localStorage.setItem('token', res.token);
+    const payload: JwtPayload = jwtDecode(res.token);
+    localStorage.setItem('login', payload.login);
+    if (payload.login === 'admin') {
+      this.router.navigate(['/admin']);
+    } else {
+      this.router.navigate(['/employee']);
     }
+  }
   
-    logout() {
-      localStorage.clear();
-      this.router.navigate(['/login']);
-    }
+  logout() {
+    localStorage.clear();
+    this.router.navigate(['/login']);
+  }
   
-    getToken(): string | null {
-      return localStorage.getItem(this.tokenKey);
-    }
+  getToken(): string | null {
+    return localStorage.getItem(this.tokenKey);
+  }
   
-     setToken(token: string) {
-       localStorage.setItem(this.tokenKey, token);
-     }
+  setToken(token: string) {
+    localStorage.setItem(this.tokenKey, token);
+  }
   
-    isLoggedIn(): boolean {
-      return !!this.getToken();
-    }
+  isLoggedIn(): boolean {
+    return !!this.getToken();
+  }
 
-    getLoginFromToken(): string | null {
-      const token = this.getToken();
-      if (!token) return null;
-      const payload: JwtPayload = jwtDecode(token);
-      return payload.login;
-    }
+  getLoginFromToken(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+    const payload: JwtPayload = jwtDecode(token);
+    return payload.login;
+  }
   
-    isAdmin(): boolean {
-      return this.getLoginFromToken() === 'admin';
-    }
+  isAdmin(): boolean {
+    return this.getLoginFromToken() === 'admin';
+  }
   
     // Decodifica JWT sin validar firma (solo para lectura)
     // getLoginFromToken(): string | null {
