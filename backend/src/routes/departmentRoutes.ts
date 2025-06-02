@@ -7,6 +7,9 @@ const router = express.Router();
 // Empleados logueados.
 router.get('/department/:id', authenticateToken, getDepartmentById);
 
+// Register requirement to be able to fill select option during new registration.
+//router.get('/department/', getDepartments);
+
 // CRUD de departamentos solo admin.
 router.get('/department/', authenticateToken, requireAdmin, getDepartments);
 router.get('/department/:id', authenticateToken, requireAdmin, getDepartmentById);

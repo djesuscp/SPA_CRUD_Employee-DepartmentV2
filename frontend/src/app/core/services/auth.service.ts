@@ -30,7 +30,12 @@ export class AuthService {
     saveSession(res: { token: string }) {
       localStorage.setItem('token', res.token);
       const payload: JwtPayload = jwtDecode(res.token);
-      localStorage.setItem('login', payload.login); // guardar login si quieres
+      localStorage.setItem('login', payload.login);
+      if (payload.login === 'admin') {
+         this.router.navigate(['/admin']);
+       } else {
+         this.router.navigate(['/employee']);
+       }
     }
   
     logout() {

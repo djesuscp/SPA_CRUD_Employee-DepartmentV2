@@ -13,6 +13,9 @@ router.get('/employee/:id', authenticateToken, getEmployeeById);
 
 router.get('/employee/by-login/:login', authenticateToken, getEmployeeByLogin);
 
+// Register requirement to be able to check new register user data against existing user in database.
+//router.get('/employee/', getEmployees);
+
 // CRUD only for admin.
 router.get('/employee/', authenticateToken, requireAdmin, getEmployees);
 router.put('/employee/:id', authenticateToken, requireAdmin, updateEmployee);

@@ -32,6 +32,7 @@ export class AdminDashboardComponent implements OnInit {
   error: string = '';
 
   constructor() {
+    // Regular expresions to check ID and phone.
     const dniNieRegex = /^(?:\d{8}|[XYZ]\d{7})[A-Z]$/;
     const phoneRegex = /^\d{9}$/;
 
@@ -50,11 +51,13 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 
+  // First thing that loads into the page are employees and departments.
   ngOnInit(): void {
     this.fetchEmployees();
     this.fetchDepartments();
   }
 
+  // GET employees.
   fetchEmployees(): void {
     this.employeeService.getEmployees().subscribe({
     next: (data) => this.employees = data,
@@ -69,6 +72,7 @@ export class AdminDashboardComponent implements OnInit {
   });
   }
 
+  // GET departments.
   fetchDepartments(): void {
     this.departmentService.getDepartments().subscribe({
       next: (data) => this.departments = data,
@@ -83,12 +87,12 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 
+  // PUT or POST employee.
   submitEmployeeForm(): void {
     if (this.employeeForm.invalid) return;
 
     const data = this.employeeForm.getRawValue();
     data.departmentId = Number(data.departmentId);
-    //const data = this.employeeForm.value;
     if (this.editingEmployeeId) {
       this.employeeService.updateEmployee(this.editingEmployeeId, data).subscribe({
         next: (res) => {
@@ -127,12 +131,14 @@ export class AdminDashboardComponent implements OnInit {
     }
   }
 
+  // Manage employee ID depending on PUT or POST state.
   editEmployee(emp: any): void {
     this.editingEmployeeId = emp.id;
     this.employeeForm.patchValue(emp);
     this.employeeForm.get('id')?.disable();
   }
 
+  // DELETE employee.
   deleteEmployee(id: string): void {
     this.employeeService.deleteEmployee(id).subscribe({
       next: (res) => {
@@ -149,6 +155,7 @@ export class AdminDashboardComponent implements OnInit {
       });
   }
 
+  // PUT or POST department.
   submitDepartmentForm(): void {
     if (this.departmentForm.invalid) return;
 
@@ -175,6 +182,7 @@ export class AdminDashboardComponent implements OnInit {
     }
   }
 
+  // Manage department ID to avoid edition.
   editDepartment(dept: any): void {
     this.editingDepartmentId = dept.id;
     this.departmentForm.patchValue({
@@ -184,6 +192,7 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 
+  // DELETE department.
   deleteDepartment(id: string): void {
       this.departmentService.deleteDepartment(id).subscribe({
       next: () => {

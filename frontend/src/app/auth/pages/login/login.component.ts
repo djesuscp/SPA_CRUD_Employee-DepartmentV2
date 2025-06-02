@@ -33,20 +33,13 @@ export class LoginComponent implements OnInit{
 
   errorMessage = '';
 
+  // POST login.
   onSubmit() {
     if (this.form.invalid) return;
 
     this.auth.login(this.form.value).subscribe({
       next: (res) => {
         this.auth.saveSession(res);
-
-        const payload: JwtPayload = jwtDecode(res.token);
-
-        if (payload.login === 'admin') {
-          this.router.navigate(['/admin']);
-        } else {
-          this.router.navigate(['/employee']);
-        }
       },
       error: () => {
         this.errorMessage = 'Credenciales inválidas';
