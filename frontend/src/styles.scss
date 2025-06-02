@@ -1,3 +1,23 @@
+// Main variables.
+
+// Color.
+$color_base_background: #1f1f1f;
+$color_button: darkred;
+$color_font: white;
+
+// Fonts.
+$font_primary: Arial, Helvetica, sans-serif;
+
+// Borders.
+$border_thickness: 0px;
+$border_radius: 6px;
+
+body {
+    background-color: $color_base_background;
+    font-family: $font_primary;
+    color: $color_font;
+}
+
 /* You can add global styles to this file, and also import other style files */
 // Cambiar fondo, texto y bordes
 .toast-success {

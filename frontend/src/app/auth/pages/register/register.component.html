@@ -1,46 +1,6 @@
-<!-- <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
-  <h2>Registro</h2>
-
-  <label>
-    DNI/NIE:
-    <input formControlName="id" />
-  </label>
-
-  <label>
-    Nombre completo
-    <input formControlName="fullName" />
-  </label>
-
-  <label>
-    Usuario
-    <input formControlName="login" />
-  </label>
-
-  <label>
-    Contraseña
-    <input type="password" formControlName="password" />
-  </label>
-
-  <label>
-    Departamento
-    <input formControlName="departmentId" />
-  </label>
-
-  <button type="submit">Registrarse</button>
-
-  <a routerLink="/login">¿Ya tienes cuenta? Inicia sesión</a>
-
-</form> -->
-
 <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
-  <!-- <div *ngIf="!editingEmployeeId">
-    <label for="id">ID (DNI/NIE):</label>
-    <input id="id" formControlName="id" type="text" />
-    <div *ngIf="employeeForm.get('id')?.touched && employeeForm.get('id')?.invalid" class="error">
-      <small *ngIf="employeeForm.get('id')?.errors?.['required']">El ID es obligatorio.</small>
-      <small *ngIf="employeeForm.get('id')?.errors?.['pattern']">Formato de ID inválido (DNI/NIE).</small>
-    </div>
-  </div> -->
+
+  <h2>Regístrate</h2>
 
   <label for="id">ID (DNI/NIE):</label>
   <input id="id" formControlName="id" type="text" />
@@ -79,4 +39,6 @@
   <button type="submit" [disabled]="employeeForm.invalid">
     Registrarse
   </button>
+
+  <a routerLink="/login">¿Ya tienes cuenta? Inicia sesión</a>
 </form>

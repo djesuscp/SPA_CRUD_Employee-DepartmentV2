@@ -42,5 +42,8 @@ export class EmployeeDashboardComponent {
     });
   }
 
+  logOut() {
+    this.authService.logout();
+  }
 
 }

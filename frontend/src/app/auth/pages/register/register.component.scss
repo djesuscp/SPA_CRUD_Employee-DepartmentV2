@@ -1,3 +1,68 @@
+// Main variables.
+
+// Color.
+$color_base_background: #1f1f1f;
+$color_button: darkred;
+$color_font: white;
+
+// Fonts.
+$font_primary: Arial, Helvetica, sans-serif;
+
+// Borders.
+$border_thickness: 0px;
+$border_radius: 6px;
+
+@mixin flex($direction, $text_align) {
+  display: flex;
+  flex-direction: $direction;
+  text-align: $text_align;
+}
+
+
+form {
+    justify-self: center;
+    @include flex(column, center);
+    width: 45%;
+    gap: 1.25em;
+    select {
+      background-color: lighten($color: $color_base_background, $amount: 20%);
+      color: $color_font;
+    }
+    input {
+      background-color: lighten($color: $color_base_background, $amount: 20%);
+      color: $color_font;
+      border: $border_thickness;
+      border-radius: $border_radius;
+      height: 1.5em;
+    }
+    button {
+        width: 20%;
+        align-self: center;
+        border: $border_thickness;
+        border-radius: $border_radius;
+        padding: 0.5em;
+        background-color: $color_button;
+        text-decoration: none;
+        color: white;
+        &:hover {
+        background-color: lighten($color: $color_button, $amount: 25%);
+        }
+        &:active {
+        background-color: lighten($color: $color_button, $amount: 45%);
+        }
+        &:disabled {
+        background-color: lighten($color: $color_base_background, $amount: 15%);
+        color: darken($color: $color_font, $amount: 25%);
+        }
+    }
+    a {
+        color: $color_button;
+        &:active {
+            color: darken($color: $color_button, $amount: 10%);
+        }
+    }
+}
+
 .error {
     color: red;
     font-weight: bold;

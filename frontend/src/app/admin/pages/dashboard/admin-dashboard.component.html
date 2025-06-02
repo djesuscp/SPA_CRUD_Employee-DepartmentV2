@@ -4,13 +4,14 @@
   <div *ngIf="error" class="error">{{ error }}</div>
 
   <!-- EMPLEADOS -->
-  <section>
+  <div class="content">
+    <section>
     <h2>Gestión de Empleados</h2>
 
     <form [formGroup]="employeeForm" (ngSubmit)="submitEmployeeForm()" #empForm="ngForm" novalidate>
       <!-- ID - solo cuando no estamos editando -->
+      <label for="id">ID (DNI/NIE):</label>
       <div *ngIf="!editingEmployeeId">
-        <label for="id">ID (DNI/NIE):</label>
         <input id="id" formControlName="id" type="text" />
         <div *ngIf="employeeForm.get('id')?.touched && employeeForm.get('id')?.invalid" class="error">
           <small *ngIf="employeeForm.get('id')?.errors?.['required']">El ID es obligatorio.</small>
@@ -50,14 +51,6 @@
       </button>
     </form>
 
-    <!-- <div *ngIf="successMessage" class="alert success">
-      {{ successMessage }}
-    </div>
-
-    <div *ngIf="errorMessage" class="alert error">
-      {{ errorMessage }}
-    </div> -->
-
     <h2>Empleados</h2>
     <table>
       <thead>
@@ -77,16 +70,14 @@
           <td>
             {{ emp.departmentId }}
           </td>
-          <td>
-            <button (click)="editEmployee(emp)">Editar</button>
-            <button (click)="deleteEmployee(emp.id)">Eliminar</button>
+          <td class="tButtons">
+            <button class="edit" (click)="editEmployee(emp)">Editar</button>
+            <button class="delete" (click)="deleteEmployee(emp.id)">Eliminar</button>
           </td>
         </tr>
       </tbody>
     </table>
   </section>
-
-  <hr />
 
   <!-- DEPARTAMENTOS -->
   <section>
@@ -143,14 +134,15 @@
           <td>{{ dept.name }}</td>
           <td>{{ dept.phone }}</td>
           <td>{{ dept.email }}</td>
-          <td>
-            <button (click)="editDepartment(dept)">Editar</button>
-            <button (click)="deleteDepartment(dept.id)">Eliminar</button>
+          <td class="tButtons">
+            <button class="edit" (click)="editDepartment(dept)">Editar</button>
+            <button class="delete" (click)="deleteDepartment(dept.id)">Eliminar</button>
           </td>
         </tr>
       </tbody>
     </table>
   </section>
-  <button (click)="logOut()">Log Out</button>
+  </div>
+  <button class="logout" (click)="logOut()">Log Out</button>
 </div>
 
