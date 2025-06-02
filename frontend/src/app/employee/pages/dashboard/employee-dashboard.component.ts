@@ -1,10 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { EmployeeService } from '../../../core/services/employee.service';
-import { DepartmentService } from '../../../core/services/department.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -16,7 +13,6 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class EmployeeDashboardComponent {
   private employeeService = inject(EmployeeService);
-  private departmentService = inject(DepartmentService);
   private toastr = inject(ToastrService);
   private authService = inject(AuthService);
 

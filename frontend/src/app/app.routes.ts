@@ -1,7 +1,4 @@
 import { Routes } from '@angular/router';
-import { provideRouter } from '@angular/router';
-import { CanActivate } from '@angular/router';
-import { inject } from '@angular/core';
 import { AdminGuard } from './core/guards/admin.guard';
 import { EmployeeGuard } from './core/guards/employee.guard';
 

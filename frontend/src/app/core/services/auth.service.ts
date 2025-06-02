@@ -1,7 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 
@@ -16,7 +15,7 @@ export interface JwtPayload {
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
-
+  private readonly tokenKey = 'token';
   private readonly baseUrl = 'http://localhost:3000/api';
 
   login(data: any): Observable<any> {
@@ -32,10 +31,10 @@ export class AuthService {
       const payload: JwtPayload = jwtDecode(res.token);
       localStorage.setItem('login', payload.login);
       if (payload.login === 'admin') {
-         this.router.navigate(['/admin']);
-       } else {
-         this.router.navigate(['/employee']);
-       }
+        this.router.navigate(['/admin']);
+      } else {
+        this.router.navigate(['/employee']);
+      }
     }
   
     logout() {
@@ -43,22 +42,27 @@ export class AuthService {
       this.router.navigate(['/login']);
     }
   
-    private readonly tokenKey = 'token';
-  
     getToken(): string | null {
       return localStorage.getItem(this.tokenKey);
     }
   
-    setToken(token: string) {
-      localStorage.setItem(this.tokenKey, token);
-    }
-  
-    clearToken() {
-      localStorage.removeItem(this.tokenKey);
-    }
+     setToken(token: string) {
+       localStorage.setItem(this.tokenKey, token);
+     }
   
     isLoggedIn(): boolean {
       return !!this.getToken();
+    }
+
+    getLoginFromToken(): string | null {
+      const token = this.getToken();
+      if (!token) return null;
+      const payload: JwtPayload = jwtDecode(token);
+      return payload.login;
+    }
+  
+    isAdmin(): boolean {
+      return this.getLoginFromToken() === 'admin';
     }
   
     // Decodifica JWT sin validar firma (solo para lectura)
@@ -74,16 +78,7 @@ export class AuthService {
     //   }
     // }
 
-    getLoginFromToken(): string | null {
-      const token = this.getToken();
-      if (!token) return null;
-      const payload: JwtPayload = jwtDecode(token);
-      return payload.login;
-    }
-  
-    isAdmin(): boolean {
-      return this.getLoginFromToken() === 'admin';
-    }
+
 
   // private apiUrl = 'http://localhost:3000/api'; // ajusta si es necesario
 
@@ -123,14 +118,5 @@ export class AuthService {
 
   //   const payload: JwtPayload = jwtDecode(token);
   //   return payload.login;
-  // }
-
-
-  // isAdmin(): boolean {
-  //   return localStorage.getItem('role') === 'admin';
-  // }
-
-  // isLoggedIn(): boolean {
-  //   return !!this.getToken();
   // }
 }

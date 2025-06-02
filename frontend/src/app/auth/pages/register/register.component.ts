@@ -1,8 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
+import { RouterModule } from '@angular/router';
 import { EmployeeService } from '../../../core/services/employee.service';
 import { DepartmentService } from '../../../core/services/department.service';
 import { ToastrService } from 'ngx-toastr';
@@ -17,8 +16,6 @@ import { ToastrService } from 'ngx-toastr';
 export class RegisterComponent implements OnInit {
   employeeForm: FormGroup;
   private fb = inject(FormBuilder);
-  private auth = inject(AuthService);
-  private router = inject(Router);
   private employeeService = inject(EmployeeService);
   private departmentService = inject(DepartmentService);
   private toastr = inject(ToastrService);
@@ -39,6 +36,7 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  // First thing that loads into the page are employees and departments hidden to be able to get against the new data provided in this view by the user.
   ngOnInit(): void {
     this.fetchEmployees();
     this.fetchDepartments();

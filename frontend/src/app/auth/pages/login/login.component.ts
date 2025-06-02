@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
-import { jwtDecode } from 'jwt-decode';
-import { JwtPayload } from '../../../core/services/auth.service';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -20,8 +17,7 @@ export class LoginComponent implements OnInit{
 
   constructor(
     private fb: FormBuilder,
-    private auth: AuthService,
-    private router: Router
+    private auth: AuthService
   ) {}
 
   ngOnInit(): void {
