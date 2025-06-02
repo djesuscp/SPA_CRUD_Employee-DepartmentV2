@@ -41,6 +41,43 @@ export const getEmployeeById = async (req: Request, res: Response) => {
   }
 };
 
+// GET employee by login.
+export const getEmployeeByLogin = async (req: Request, res: Response) => {
+  const loginFromToken = req.userLogin;
+  const loginFromParam = req.params.login;
+
+  try {
+    // Admin puede ver cualquier login
+    // Un empleado solo puede ver su propio login
+    if (loginFromToken !== loginFromParam && loginFromToken !== 'admin') {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    const employee = await prisma.employee.findUnique({
+      where: { login: loginFromParam },
+      select: {
+        id: true,
+        fullName: true,
+        login: true,
+        department: {
+          select: {
+            name: true,
+            phone: true,
+            email: true
+          }
+        }
+      }
+    });
+
+    if (!employee) return res.status(404).json({ message: 'Empleado no encontrado' });
+
+    res.json(employee);
+  } catch (err) {
+    res.status(500).json({ message: 'Error al obtener empleado', detail: err });
+  }
+};
+
+
 // REGISTER or CREATE employee. DONE
 export const registerEmployee = async (req: Request, res: Response) => {
   const { id, fullName, login, password, departmentId } = req.body;

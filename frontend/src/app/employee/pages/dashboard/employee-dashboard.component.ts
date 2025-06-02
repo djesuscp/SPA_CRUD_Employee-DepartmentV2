@@ -9,6 +9,8 @@ import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-dashboard',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './employee-dashboard.component.html',
   styleUrl: './employee-dashboard.component.scss'
 })
@@ -16,30 +18,29 @@ export class EmployeeDashboardComponent {
   private employeeService = inject(EmployeeService);
   private departmentService = inject(DepartmentService);
   private toastr = inject(ToastrService);
+  private authService = inject(AuthService);
 
   employee: any | null = '';
 
-  // ngOnInit(): void {
-  //   this.fetchEmployees();
-  // }
+   ngOnInit(): void {
+    const login = this.authService.getLoginFromToken();
 
-  fetchEmployees(id: string): void {
-    this.employeeService.getEmployeeById(id).subscribe({
-    next: (data) => {
-      const { password, ...employeeWithoutPassword } = data;
-      this.employee = employeeWithoutPassword;
-      console.log(this.employee);
-      console.log('Departamento:', this.employee.department.name);
-    },
-    error: (err) => {
-      this.employee = null;
-      if (err.status === 404) {
-        this.toastr.info('Empleado no encontrado.');
-      } else {
-        this.toastr.error('Error al cargar el empleado.');
-      }
+    if (!login) {
+      this.toastr.error('No se encontró login en el token');
+      return;
     }
-  });
+
+    this.employeeService.getEmployeeByLogin(login).subscribe({
+      next: (data) => {
+        this.employee = data;
+      },
+      error: (err) => {
+        this.toastr.error('Error al obtener los datos del empleado.');
+        console.error('Error al obtener los datos del empleado:', err);
+        this.employee = null;
+      }
+    });
   }
+
 
 }

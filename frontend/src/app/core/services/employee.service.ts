@@ -11,8 +11,8 @@ export class EmployeeService {
     return this.http.get<any[]>(`${this.baseUrl}/employee/`);
   }
 
-  getEmployeeById(id: string): Observable<any> {
-  return this.http.get<any>(`${this.baseUrl}/employees/${id}`);
+  getEmployeeByLogin(login: string): Observable<any> {
+  return this.http.get<any>(`${this.baseUrl}/employee/by-login/${login}`);
   }
 
   createEmployee(data: any): Observable<any> {

@@ -1,7 +1,6 @@
 <h2>Empleado</h2>
 <div *ngIf="employee; else noEmployee">
   <h2>Detalles del Empleado</h2>
-  
   <table>
     <thead>
       <tr>
@@ -22,6 +21,18 @@
         <td>Login</td>
         <td>{{ employee.login }}</td>
       </tr>
+    </tbody>
+  </table>
+
+  <h2>Detalles del departamento</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Campo</th>
+        <th>Valor</th>
+      </tr>
+    </thead>
+    <tbody>
       <tr>
         <td>Departamento</td>
         <td>{{ employee.department?.name }}</td>

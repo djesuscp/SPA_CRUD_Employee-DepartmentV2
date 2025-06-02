@@ -7,7 +7,6 @@ import { jwtDecode } from 'jwt-decode';
 
 export interface JwtPayload {
   login: string;
-  // puedes añadir más propiedades si tu token las incluye
 }
 
 @Injectable({
@@ -18,7 +17,7 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
 
-  private readonly baseUrl = 'http://localhost:3000/api'; // Cambia según tu backend
+  private readonly baseUrl = 'http://localhost:3000/api';
 
   login(data: any): Observable<any> {
       return this.http.post(`${this.baseUrl}/login`, data);
@@ -30,7 +29,6 @@ export class AuthService {
   
     saveSession(res: { token: string }) {
       localStorage.setItem('token', res.token);
-  
       const payload: JwtPayload = jwtDecode(res.token);
       localStorage.setItem('login', payload.login); // guardar login si quieres
     }
@@ -59,16 +57,23 @@ export class AuthService {
     }
   
     // Decodifica JWT sin validar firma (solo para lectura)
+    // getLoginFromToken(): string | null {
+    //   const token = this.getToken();
+    //   if (!token) return null;
+  
+    //   try {
+    //     const payload = JSON.parse(atob(token.split('.')[1]));
+    //     return payload?.login ?? null;
+    //   } catch (e) {
+    //     return null;
+    //   }
+    // }
+
     getLoginFromToken(): string | null {
       const token = this.getToken();
       if (!token) return null;
-  
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        return payload?.login ?? null;
-      } catch (e) {
-        return null;
-      }
+      const payload: JwtPayload = jwtDecode(token);
+      return payload.login;
     }
   
     isAdmin(): boolean {
