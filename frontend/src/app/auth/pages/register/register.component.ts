@@ -8,8 +8,8 @@ import { DepartmentService } from '../../../core/services/department.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  standalone: true,
   selector: 'app-register',
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
